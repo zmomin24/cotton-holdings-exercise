@@ -1,6 +1,5 @@
 import datetime as dt
 import requests as rq 
-import pandas as pd
 import sqlite3 as db
 
 def alerts_count_by_state():

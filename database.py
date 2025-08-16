@@ -7,7 +7,7 @@ def create_db():
     sqlCursor = connection.cursor()
 
     sqlCursor.execute("CREATE TABLE IF NOT EXISTS alerts_by_state"
-    "(alert_by_state_id INTEGER PRIMARY KEY," \
+    "(alert_by_state_id INTEGER PRIMARY KEY AUTOINCREMENT," \
     " state TEXT," \
     " count_of_alerts INTEGER," \
     "create_ts DATETIME)")

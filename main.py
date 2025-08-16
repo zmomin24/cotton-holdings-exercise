@@ -1,29 +1,28 @@
 import datetime as dt
 import requests as rq 
+import sqlite3 as db
 import pandas as pd
 
 
-weatherAlertsUrl = "https://api.weather.gov/alerts"
 
+def get_query_results():
 
-response = rq.get(weatherAlertsUrl).json()
-print(response)
+    connection = db.connect("cotton.db")
 
-#data = pd.json_normalize(response["features"],["properties","areasAffected"],["id","type","geometry.type","geometry.coordinates","properties.headline","properties.description","properties.instruction","properties.event","properties.severity","properties.urgency","properties.certainty","properties.expires"],record_prefix="area_")
-#data = pd.json_normalize(response,"features",["properties","id","type"],errors="ignore")
+    sqlCursor = connection.cursor()
 
-#print(data.head(2))
+    
+    '''sqlCursor.execute("select state, sum(count_of_alerts) as total_alerts "\
+                      "from alerts_by_state "\
+                      "group by state "\
+                      "order by total_alerts desc")'''
+    
+    #Query to return total alerts by state
+    print(pd.read_sql_query("select state, sum(count_of_alerts) as total_alerts "\
+                      "from alerts_by_state "\
+                      "group by state "\
+                      "order by total_alerts desc",connection))
+    
+    
 
-#print(pd.json_normalize(response))
-
-if 'features' in response and response['features']:
-    df = pd.json_normalize(response['features'])
-
-    print(df.head())
-
-    properties_columns = [col for col in df.columns if col.startswith('properties.')]
-    properties_df = df[properties_columns]
-
-    print(properties_df.head())
-else:
-    print("no features found in response")
+get_query_results()
