@@ -2,6 +2,9 @@ import datetime as dt
 import requests as rq 
 import sqlite3 as db
 import pandas as pd
+from database import create_db
+from alerts_by_state import alerts_count_by_state
+from all_alerts_data import all_alerts_data
 
 
 
@@ -9,8 +12,8 @@ def get_query_results():
 
     connection = db.connect("cotton.db")
 
-    sqlCursor = connection.cursor()
-
+    print()
+    print()
     #Was going to use this but cant format the output so used pandas instead
     '''sqlCursor.execute("select state, sum(count_of_alerts) as total_alerts "\
                       "from alerts_by_state "\
@@ -52,7 +55,7 @@ def get_query_results():
                             "order by state desc",connection))
     print()
     print()
-    
+
     #Query to return average duration (expiry minus sent) of alert by event type in minutes
     print("----- Average Alert Duration by Event Type in Minutes -----")
     print(pd.read_sql_query("select event, " \
@@ -65,4 +68,11 @@ def get_query_results():
     
     
 
-get_query_results()
+#get_query_results()
+if __name__ == "__main__":
+    create_db()
+    alerts_count_by_state()
+    all_alerts_data()
+    get_query_results()
+print("----- Program Completed -----")
+

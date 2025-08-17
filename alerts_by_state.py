@@ -4,6 +4,8 @@ import sqlite3 as db
 
 def alerts_count_by_state():
 
+    print("/*** begin function to load data from active alerts count API ***/")
+
     weatherAlertsUrl = "https://api.weather.gov/alerts/active/count"
 
 
@@ -11,24 +13,23 @@ def alerts_count_by_state():
     #print(response)
 
     areas_counts = response.get('areas',{})
-    print(areas_counts)
+    #print(areas_counts)
 
-    #df_regions = pd.DataFrame(areas_counts.items(), columns=['Region','Active_Alerts'])
-    #print(df_regions)
 
+    #Set current_timestamp variable so we can insert it into the DB for record creation time
     current_timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     connection = db.connect("cotton.db")
 
     sqlCursor = connection.cursor()
 
+    #delete all records from the table so we can load fresh, can remove in future to keep historical data
     sqlCursor.execute("DELETE FROM alerts_by_state")
-    #sqlCursor.execute("DELETE FROM 'sqlite_sequence' WHERE 'name'='alerts_by_state'")
 
     for area, count in areas_counts.items():
-        insert_query = f"INSERT INTO alerts_by_state (state, count_of_alerts, create_ts)"\
+        '''insert_query = f"INSERT INTO alerts_by_state (state, count_of_alerts, create_ts)"\
         "VALUES ( '{area}','{count}', '{current_timestamp}');"
-        print(insert_query)
+        print(insert_query)'''
 
         sqlCursor.execute(f"INSERT INTO alerts_by_state (state, count_of_alerts, create_ts) VALUES (?, ?, ?)", 
                           (area, count, current_timestamp))
@@ -37,11 +38,14 @@ def alerts_count_by_state():
 
     connection.commit()
 
-    sqlCursor.execute("SELECT * FROM alerts_by_state")
+    #sqlCursor.execute("SELECT * FROM alerts_by_state")
 
-    print(sqlCursor.fetchall())
+    #print(sqlCursor.fetchall())
 
     connection.close()
 
+    print("/*** end of function to load data from active alerts count API ***/")
 
-alerts_count_by_state()
+
+
+#alerts_count_by_state()

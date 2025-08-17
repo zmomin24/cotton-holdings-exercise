@@ -2,10 +2,12 @@
 import sqlite3 as db
 
 def create_db():
+
+    print("/*** initializing database ***/")
     connection = db.connect("cotton.db")
 
     sqlCursor = connection.cursor()
-
+    
     sqlCursor.execute("CREATE TABLE IF NOT EXISTS alerts_by_state"
     "(alert_by_state_id INTEGER PRIMARY KEY AUTOINCREMENT," \
     " state TEXT," \
@@ -23,9 +25,11 @@ def create_db():
     "expire_ts DATETIME," \
     "record_create_ts DATETIME)")
     
+    print("/*** Database Tables Created ***/")
 
-    result = sqlCursor.execute("SELECT name FROM sqlite_master")
-    print(result.fetchall())
 
-create_db()
+    #result = sqlCursor.execute("SELECT name FROM sqlite_master")
+    #print(result.fetchall())
+
+#create_db()
 

@@ -4,6 +4,9 @@ import sqlite3 as db
 
 def all_alerts_data():
 
+    print("/*** begin function to load data from active alerts data API ***/")\
+
+
     activeWeatherAlertUrl = "https://api.weather.gov/alerts/active"
 
     response = rq.get(activeWeatherAlertUrl).json()
@@ -12,12 +15,15 @@ def all_alerts_data():
     weather_alerts = response.get('features',{})
     #print(weather_alerts)
 
+    #Empty list to add cleaned alerts to from below for loop
     cleaned_alerts = []
+
     for alert in weather_alerts:
         properties = alert.get('properties',{})
         area_desc = properties.get('areaDesc','')
 
         #Split state from areaDesc and save it separately and assume is is always 2 characters and uppercase
+        #Will save multiple states if there are multiple states in areaDesc, discarding duplicates
         states = {word.strip() for word in area_desc.replace(';',' ').split() if len(word.strip())==2 and word.strip().isupper()}
 
         # if not state found then store as null
@@ -43,7 +49,7 @@ def all_alerts_data():
                 'expires': properties.get('expires','')
             })
 
-    print(cleaned_alerts[10])  # Print keys of the first alert for verification
+    #print(cleaned_alerts[10])  # Print keys of the first alert for verification
 
     current_timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -70,11 +76,14 @@ def all_alerts_data():
 
     connection.commit()
 
-    sqlCursor.execute("SELECT * FROM all_alerts_data")
+    #sqlCursor.execute("SELECT * FROM all_alerts_data")
 
-    print(sqlCursor.fetchall())
+    #print(sqlCursor.fetchall())
 
     connection.close()
 
-all_alerts_data()
+    print("/*** end function to load data from active alerts data API ***/")\
+
+
+#all_alerts_data()
 
