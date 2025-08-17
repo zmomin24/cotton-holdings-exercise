@@ -28,8 +28,8 @@ We called two APIs:
 
     2. Call https://api.weather.gov/alerts/active which gives us back all active alerts data 
 
-    3. Full library of API call available can be found here: https://www.weather.gov/documentation/services-web-api#/
-    
+Full library of API call available can be found here: https://www.weather.gov/documentation/services-web-api#/
+
 Data from these APIs was stored in tables that we created using the python library for sqlite3
 We then ran 4 analytical queries against these data sets which will be explained below in the next section
 
