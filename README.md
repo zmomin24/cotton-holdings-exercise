@@ -40,9 +40,9 @@ This is not ideal when looking for historical data, but for the purpose of this 
 
 1. Query to return total active alert counts by state
 ```SQL
-select state, sum(count_of_alerts)  as total_alerts  from alerts_by_state
-group by state
-order by total_alerts desc
+SELECTT state, sum(count_of_alerts)  AS total_alerts  FROM alerts_by_state
+GROUP BY state
+ORDER BY total_alerts DESC
 ```
 Results:
 
@@ -50,16 +50,16 @@ Results:
 
 2. Query to return top 10 states with most active alerts count
 ```SQL
-with alert_rank as 
+WITH alert_rank AS 
 (select state,
- sum(count_of_alerts)  as total_alerts ,
- row_number () over (order by sum(count_of_alerts) desc) as row_num
- from alerts_by_state
-group by state
-order by total_alerts desc)
-select state, total_alerts 
-from alert_rank 
-where row_num <=10
+ sum(count_of_alerts)  AS total_alerts ,
+ row_number () OVER (ORDER BY sum(count_of_alerts) DESC) AS row_num
+ FROM alerts_by_state
+GROUP BY state
+ORDER BY total_alerts DESC)
+SELECT state, total_alerts 
+FROM alert_rank 
+WHERE row_num <=10
 ```
 
 Results:
@@ -68,12 +68,12 @@ Results:
 
 3. Query to return alert count by state and event type
 ```SQL
-select state,
+SELECT state,
 event,
-count(*)  as alert_count
+count(*)  AS alert_count
 from all_alerts_data
-group by state, event
-order by state desc
+GROUP BY state, event
+ORDER BY state DESC
 ```
 
 Results:
@@ -82,11 +82,11 @@ Results:
 
 4. Query to return average alert duration based on event type
 ```SQL
-select event, avg((julianday(expire_ts) - julianday(sent_ts))*24*60) as avg_alert_duration_in_minutes
-from all_alerts_data
-where expire_ts is not null and sent_ts is not null 
-group by event
-order by avg_alert_duration_in_minutes desc
+SELECT event, avg((julianday(expire_ts) - julianday(sent_ts))*24*60) AS avg_alert_duration_in_minutes
+FROM all_alerts_data
+WHERE expire_ts IS NOT NULL AND sent_ts IS NOT NULL 
+GROUP BY event
+ORDER BY avg_alert_duration_in_minutes DESC
 ```
 
 Results:
